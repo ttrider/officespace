@@ -1,0 +1,237 @@
+{
+  "kitchen": {
+    "type": "Space",
+    "idSet": [
+      "kitchen"
+    ],
+    "area": 0
+  },
+  "kitchen.anchor.kitchenCorner": {
+    "type": "anchor",
+    "idSet": [
+      "kitchen",
+      "anchor",
+      "kitchenCorner"
+    ],
+    "position": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  "kitchen.wall.pantrywall": {
+    "type": "wall",
+    "idSet": [
+      "kitchen",
+      "wall",
+      "pantrywall"
+    ],
+    "left": {
+      "x": -36,
+      "y": 0,
+      "xd": -36,
+      "yd": 4.25,
+      "height": 120
+    },
+    "right": {
+      "x": 0,
+      "y": 0,
+      "xd": 0,
+      "yd": 4.25,
+      "height": 120
+    },
+    "length": 36,
+    "thickness": 4.25
+  },
+  "kitchen.wall.wall0": {
+    "type": "wall",
+    "idSet": [
+      "kitchen",
+      "wall",
+      "wall0"
+    ],
+    "left": {
+      "x": -36,
+      "y": -24,
+      "xd": -40.25,
+      "yd": -24,
+      "height": 108
+    },
+    "right": {
+      "x": -36,
+      "y": 0,
+      "xd": -40.25,
+      "yd": 0,
+      "height": 108
+    },
+    "length": 24,
+    "thickness": 4.25
+  },
+  "kitchen.wall.cabinetWall": {
+    "type": "wall",
+    "idSet": [
+      "kitchen",
+      "wall",
+      "cabinetWall"
+    ],
+    "left": {
+      "x": -186,
+      "y": -24,
+      "xd": -186,
+      "yd": -19.75,
+      "height": 108
+    },
+    "right": {
+      "x": -36,
+      "y": -24,
+      "xd": -36,
+      "yd": -19.75,
+      "height": 108
+    },
+    "length": 150,
+    "thickness": 4.25
+  },
+  "kitchen.wall.diningWall": {
+    "type": "wall",
+    "idSet": [
+      "kitchen",
+      "wall",
+      "diningWall"
+    ],
+    "left": {
+      "x": -186,
+      "y": 106,
+      "xd": -181.75,
+      "yd": 106,
+      "height": 108
+    },
+    "right": {
+      "x": -186,
+      "y": -24,
+      "xd": -181.75,
+      "yd": -24,
+      "height": 108
+    },
+    "length": 130,
+    "thickness": 4.25
+  },
+  "kitchen.wall.windowWall": {
+    "type": "wall",
+    "idSet": [
+      "kitchen",
+      "wall",
+      "windowWall"
+    ],
+    "left": {
+      "x": -166,
+      "y": 106,
+      "xd": -166,
+      "yd": 100,
+      "height": 108
+    },
+    "right": {
+      "x": -186,
+      "y": 106,
+      "xd": -186,
+      "yd": 100,
+      "height": 108
+    },
+    "length": 20,
+    "thickness": 6
+  },
+  "kitchen.anchor.nookRightCorner": {
+    "type": "anchor",
+    "idSet": [
+      "kitchen",
+      "anchor",
+      "nookRightCorner"
+    ],
+    "position": {
+      "x": -166,
+      "y": 106
+    }
+  },
+  "kitchen.anchor.nookLeftCorner": {
+    "type": "anchor",
+    "idSet": [
+      "kitchen",
+      "anchor",
+      "nookLeftCorner"
+    ],
+    "position": {
+      "x": -166,
+      "y": 106
+    }
+  },
+  "kitchen.wall.nook1": {
+    "type": "wall",
+    "idSet": [
+      "kitchen",
+      "wall",
+      "nook1"
+    ],
+    "left": {
+      "x": -109.4315,
+      "y": 162.5685,
+      "xd": -100.9463,
+      "yd": 154.0832,
+      "height": 108
+    },
+    "right": {
+      "x": -166,
+      "y": 106,
+      "xd": -157.5148,
+      "yd": 97.5147,
+      "height": 108
+    },
+    "length": 40,
+    "thickness": 6
+  },
+  "kitchen.wall.nook2": {
+    "type": "wall",
+    "idSet": [
+      "kitchen",
+      "wall",
+      "nook2"
+    ],
+    "left": {
+      "x": -69.4315,
+      "y": 162.5685,
+      "xd": -69.4315,
+      "yd": 156.5685,
+      "height": 108
+    },
+    "right": {
+      "x": -109.4315,
+      "y": 162.5685,
+      "xd": -109.4315,
+      "yd": 156.5685,
+      "height": 108
+    },
+    "length": 40,
+    "thickness": 6
+  },
+  "kitchen.wall.nook3": {
+    "type": "wall",
+    "idSet": [
+      "kitchen",
+      "wall",
+      "nook3"
+    ],
+    "left": {
+      "x": -12.863,
+      "y": 105.9999,
+      "xd": -21.348300000000002,
+      "yd": 97.5146,
+      "height": 108
+    },
+    "right": {
+      "x": -69.4315,
+      "y": 162.5685,
+      "xd": -77.9168,
+      "yd": 154.0832,
+      "height": 108
+    },
+    "length": 40,
+    "thickness": 6
+  }
+}

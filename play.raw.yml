@@ -1,0 +1,40 @@
+spaces:
+  kitchen:
+    floorPlan:
+      - $anchor: kitchenCorner
+      - wall:
+          name: pantrywall
+          height: 10'
+          thickness: 4-1/4"
+          length: 36" left
+      - $rotate: 90deg cw
+      - wall:
+          length: 24" left
+      - $rotate: 90deg ccw
+      - wall:
+          name: cabinetWall
+          length: 150" left
+      - $rotate: 90deg ccw
+      - wall:
+          name: diningWall
+          length: 130" left
+      - $rotate: 90deg ccw
+      - wall:
+          name: windowWall
+          thickness: 6"
+          length: 20" left
+      - $anchor: nookRightCorner
+      - $anchor:
+          name: nookLeftCorner
+      - $rotate: 45 deg cw
+      - wall:
+          name: nook1
+          length: 40in left
+      - $rotate: -45 deg cw
+      - wall:
+          name: nook2
+          length: 40in left
+      - $rotate: -45 deg cw
+      - wall:
+          name: nook3
+          length: 40in left

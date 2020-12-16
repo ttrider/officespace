@@ -1,0 +1,67 @@
+
+
+@room: kitchen
+  description: some description
+  here that can be long ** with markdown**
+
+  @wall 1
+    height: 10'
+    length: 10'
+    height: 8'
+
+@wall
+name: 2
+turn: -90 deg
+length: 10'
+
+@wall
+name: 3
+turn: -90 deg
+height: 8'
+length: 10'
+height: 10'
+
+@wall
+name: 4
+turn: -90 deg
+to: @wall.1.start
+
+@window
+wall: 1
+width: 2'
+height: 2'
+type: ddddd
+right: 14"
+bottom: 10"
+
+
+@window sq1
+wall: 1
+width: 2'
+height: 2'
+type: ddddd
+right: 14"
+bottom: 10"
+
+@window sq2
+wall: 1
+width: 2'
+height: 2'
+right: 14"
+bottom: 2" from sq2.top
+
+@door dr1
+wall: 3
+bottom: 0
+height: 76"
+left: 13" from wl1.left
+right: 13" from wl1.right
+
+
+
+
+
+
+
+
+
