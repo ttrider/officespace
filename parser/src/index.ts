@@ -9,23 +9,27 @@ function roundLength(value: number) {
 function parseLength(input?: string, supportDirection?: boolean) {
     if (!input) { throw new Error("empty length string"); }
 
+    // console.info(`================================`);
+    // console.info(`input: ${input}`);
+
     // split into parts
     const inputParts = input.trim().split(" ").filter(i => i);
     if (inputParts.length === 0) { throw new Error("empty length string"); }
 
     let lengthParts: number[] = [];
+    let reverse = false;
 
     for (let inputPart of inputParts) {
         inputPart = inputPart.trim().toLowerCase();
 
+        // console.info(`--------------------------------`);
+        // console.info(inputPart);
+
         if (supportDirection && inputPart === "left") {
-            if (lengthParts.length === 0) {
-                throw new Error("invalid length part: " + inputParts);
-            }
-            lengthParts[lengthParts.length - 1] = -lengthParts[lengthParts.length - 1];
+            reverse = true;
             continue;
         } else if (supportDirection && inputPart === "right") {
-            // do nothing
+            reverse = false;
             continue;
         }
 
@@ -33,6 +37,9 @@ function parseLength(input?: string, supportDirection?: boolean) {
 
         const match = regex.exec(inputPart);
         if (!match) { throw new Error("invalid length part: " + inputParts); }
+
+        //console.info(match);
+
 
         // group 1: whole number part
         let valNum = parseInt(match[1]);
@@ -67,11 +74,16 @@ function parseLength(input?: string, supportDirection?: boolean) {
             default:
                 throw new Error("invalid length part: " + inputParts);
         }
+
+        // console.info(`valNum: ${valNum}`);
         lengthParts.push(valNum);
     }
 
     const totalLength = roundLength(lengthParts.reduce((sum, item) => sum + item, 0));
-    return totalLength;
+
+    // console.info(`totalLength: ${totalLength}`);
+    // console.info(`================================`);
+    return reverse ? -totalLength : totalLength;
 }
 
 function calculateOffset(orientation: number, length: number) {
@@ -84,10 +96,14 @@ function calculateOffset(orientation: number, length: number) {
         sinA = 0;
     }
 
-    const cx = roundLength(cosA ? length / cosA : 0);
-    const cy = roundLength(sinA ? length / sinA : 0);
+    const cx = roundLength(cosA ? length * cosA : 0);
+    const cy = roundLength(sinA ? length * sinA : 0);
+
+    //console.log(`orientation: ${orientation}, length: ${length} cx: ${cx}, cy: ${cy}`);
     return { cx, cy };
 }
+
+
 
 function buildSvg(data: { [name: string]: Element }) {
 
@@ -203,21 +219,32 @@ interface AnchorElement extends Element {
     }
 }
 
+class WallCorner {
+
+    x: number;
+    y: number;
+    xd: number;
+    yd: number;
+    height: number;
+
+    constructor(x: number, y: number, height?: number) {
+        this.x = roundLength(x);
+        this.y = roundLength(y);
+        this.xd = 0;
+        this.yd = 0;
+        this.height = roundLength(height ?? 0);
+    }
+
+    get id() {
+        return this.x.toString() + ":" + this.y.toString();
+    }
+
+}
+
 interface WallElement extends Element {
-    left: {
-        x: number,
-        y: number,
-        xd: number,
-        yd: number,
-        height: number
-    };
-    right: {
-        x: number,
-        y: number,
-        xd: number,
-        yd: number,
-        height: number
-    };
+    left: WallCorner;
+    right: WallCorner;
+    orientation: number;
     length: number;
     thickness: number;
 }
@@ -297,8 +324,8 @@ function processData(input: any) {
 
                 for (const fpItem of space.floorPlan) {
 
-                    console.info(JSON.stringify(current));
-                    console.info(JSON.stringify(fpItem));
+                    // console.info(JSON.stringify(current));
+                    // console.info(JSON.stringify(fpItem));
 
 
                     if (fpItem.$anchor) {
@@ -314,7 +341,13 @@ function processData(input: any) {
     }
 
 
+    // post process wall connections
+
+
+
+
     return objects;
+
 
 
 
@@ -382,13 +415,7 @@ function processData(input: any) {
 
         const idSet = current.getIdSet(["wall", name]);
 
-        const startPosition = {
-            x: current.x,
-            y: current.y,
-            xd: 0,
-            yd: 0,
-            height: current.height
-        }
+        const startPosition = new WallCorner(current.x, current.y, current.height);
 
         if (item.from) {
             // TODO detect start point and use it instead
@@ -418,15 +445,7 @@ function processData(input: any) {
             // const cx = roundLength(cosA ? length / cosA : 0);
             // const cy = roundLength(sinA ? length / sinA : 0);
 
-
-            const endPosition = {
-                x: current.x + cx,
-                y: current.y + cy,
-                xd: 0,
-                yd: 0,
-                height: current.height
-            }
-
+            const endPosition = new WallCorner(current.x + cx, current.y + cy, current.height);
 
             const left = length < 0 ? endPosition : startPosition;
             const right = length < 0 ? startPosition : endPosition;
@@ -455,7 +474,7 @@ function processData(input: any) {
             }
 
             // calculate depths
-            const depthOffset = calculateOffset(current.orientation + 90, current.wallThickness);
+            const depthOffset = calculateOffset(current.orientation - 90, current.wallThickness);
 
             left.xd = left.x + depthOffset.cx;
             left.yd = left.y + depthOffset.cy;
@@ -468,7 +487,8 @@ function processData(input: any) {
                 left,
                 right,
                 length,
-                thickness: current.wallThickness
+                thickness: current.wallThickness,
+                orientation: current.orientation,
 
             } as WallElement;
         }
@@ -477,9 +497,149 @@ function processData(input: any) {
 
 }
 
+function wallConnections(data: { [name: string]: Element }) {
+
+    // list corners
+    // for each corner, adjust depth
+    // build wall path
+
+
+    const walls = Object.values(data).filter(el => el.type === "wall") as WallElement[];
+
+    const corners = walls.reduce((data, item) => {
+
+        const leftCorner = item.left.id;
+        const rightCorner = item.right.id;
+
+        const leftSet = data[leftCorner] ? data[leftCorner] : (data[leftCorner] = []);
+        const rightSet = data[rightCorner] ? data[rightCorner] : (data[rightCorner] = []);
+
+        const corner = { wall: item, leftId: leftCorner, rightId: rightCorner };
+
+        leftSet.push(corner);
+        rightSet.push(corner);
+
+        return data;
+    }, {} as { [data: string]: WallSegment[] });
+
+    // in each corner, we should have AT MOST 2 walls
+    // single points indicate wall ends
+
+    const wallPaths: WallSegment[] = [];
+
+    for (const cornerId in corners) {
+        if (Object.prototype.hasOwnProperty.call(corners, cornerId)) {
+            const corner = corners[cornerId];
+
+            if (corner.length === 1) {
+                // end segment
+                if (cornerId === corner[0].rightId) {
+                    // start new path
+                    wallPaths.push(corner[0]);
+                }
+                // if we have only right corner, it is ok to skip it
+            } else if (corner.length === 2) {
+
+                if (cornerId === corner[0].leftId) {
+                    // the other one MUST be thr right corner
+                    if (cornerId === corner[1].rightId) {
+                        corner[0].rightSegment = corner[1];
+                        corner[1].leftSegment = corner[0];
+                    } else {
+                        throw new Error("incorrent segment linking: " + cornerId);
+                    }
+                } else if (cornerId === corner[1].leftId) {
+                    // the other one MUST be thr right corner
+                    if (cornerId === corner[0].rightId) {
+                        corner[1].rightSegment = corner[0];
+                        corner[0].leftSegment = corner[1];
+                    } else {
+                        throw new Error("incorrent segment linking: " + cornerId);
+                    }
+                } else {
+                    throw new Error("incorrent segment linking: " + cornerId);
+                }
+            } else {
+                throw new Error("too many segments for one corner: " + cornerId);
+            }
+        }
+    }
+
+    // at this point we should have segments linked
+    // lets traverse links and adjust depth points
+
+    for (const wallPath of wallPaths) {
+
+        processPath(wallPath);
 
 
 
+
+
+    }
+
+
+    function processPath(head: WallSegment) {
+        // head we can leave alone
+        let current = head;
+        while (current.rightSegment !== undefined) {
+
+            const leftWall = current.wall;
+            const rightWall = current.rightSegment.wall;
+
+            //const orientationDiff = (180 - (leftWall.orientation - rightWall.orientation)) / 2 + leftWall.orientation;
+
+            // const thicknessOffset = Math.sqrt(leftWall.thickness * leftWall.thickness + rightWall.thickness * rightWall.thickness);
+            // const depthOffset = calculateOffset(orientationDiff, thicknessOffset);
+
+            // leftWall.left.xd = leftWall.left.x - depthOffset.cx;
+            // leftWall.left.yd = leftWall.left.y - depthOffset.cy;
+            // rightWall.right.xd = leftWall.left.xd;
+            // rightWall.right.yd = leftWall.left.yd;
+
+            ////////////////////
+            // const depthOffsetLeft = calculateOffset(orientationDiff, Math.sqrt(leftWall.thickness * leftWall.thickness + leftWall.thickness * leftWall.thickness));
+            // leftWall.left.xd = leftWall.left.x - depthOffsetLeft.cx;
+            // leftWall.left.yd = leftWall.left.y - depthOffsetLeft.cy;
+
+            // const depthOffsetRight = calculateOffset(orientationDiff, Math.sqrt(rightWall.thickness * rightWall.thickness + rightWall.thickness * rightWall.thickness));
+            // rightWall.right.xd = rightWall.right.x - depthOffsetRight.cx;
+            // rightWall.right.yd = rightWall.right.y - depthOffsetRight.cy;
+
+            ////////////////////
+            const orientationDiff = (180 - (leftWall.orientation - rightWall.orientation)  + leftWall.orientation)/2;
+
+            let cosA = Math.cos(orientationDiff * (Math.PI / 180));
+            if (Math.abs(cosA) < 0.000001) {
+                cosA = 0;
+            }
+
+            const lth = roundLength(cosA ? leftWall.thickness * cosA : 0);
+            const depthOffsetLeft = calculateOffset(orientationDiff, lth);
+            leftWall.left.xd = leftWall.left.x - depthOffsetLeft.cx;
+            leftWall.left.yd = leftWall.left.y - depthOffsetLeft.cy;
+
+            const rth = roundLength(cosA ? rightWall.thickness * cosA : 0);
+            const depthOffsetRight = calculateOffset(orientationDiff, rth);
+            rightWall.right.xd = rightWall.right.x - depthOffsetRight.cx;
+            rightWall.right.yd = rightWall.right.y - depthOffsetRight.cy;
+
+            ////////
+
+
+
+            current = current.rightSegment;
+        }
+    }
+}
+
+interface WallSegment {
+    leftSegment?: WallSegment;
+    leftId: string;
+    rightSegment?: WallSegment;
+    rightId: string;
+    wall: WallElement;
+}
 
 
 //\d+((\.\d+)|(\-(\d+)\/(2|4|8|16)+))?('|"|ft|in)
@@ -499,105 +659,29 @@ function processData(input: any) {
 // 16-8/16' 17-9/2"
 // 18-10/4ft 19-11/8in
 
-const data = {
-
-    spaces: {
-
-        "kitchen": {
-
-
-            floorPlan: [
-                {
-                    "$anchor": "kitchenCorner"
-                },
-                {
-                    "wall": {
-                        "name": "pantrywall",
-                        "height": "10'",
-                        "thickness": "4-1/4\"",
-                        "length": "36\" left"
-                    }
-                },
-                { "$rotate": "90deg cw" },
-                {
-                    "wall": {
-                        "length": "24\" left"
-                    }
-                },
-                { $rotate: "90deg ccw" },
-                {
-                    "wall": {
-                        "name": "cabinetWall",
-                        "length": "150\" left",
-                    }
-                },
-                { "$rotate": "90deg ccw" },
-                {
-                    "wall": {
-                        "name": "diningWall",
-                        "length": "130\" left",
-                    }
-                },
-                { "$rotate": "90deg ccw" },
-                {
-                    "wall": {
-                        "name": "windowWall",
-                        "thickness": "6\"",
-                        "length": "20\" left",
-                    }
-                },
-                { "$anchor": "nookRightCorner" },
-                {
-                    "$anchor": {
-                        name: "nookLeftCorner"
-                    }
-                },
-                {
-                    "$rotate": "45 deg cw"
-                },
-                {
-                    "wall": {
-                        "name": "nook1",
-                        "length": "40in left"
-                    }
-                },
-                { "$rotate": "-45 deg cw" },
-                {
-                    "wall": {
-                        "name": "nook2",
-                        "length": "40in left"
-                    }
-                },
-                { "$rotate": "-45 deg cw" },
-                {
-                    "wall": {
-                        "name": "nook3",
-                        "length": "40in left"
-                        // "to": "@anchor.nookLeftCorner"
-                    }
-                },
-
-            ]
-
-
-        }
-    }
-}
 
 
 
-const strData = YAML.stringify(data, {
+const bd = fs.readFileSync("./play.raw.yml");
+const strData = (bd ?? "").toString();
 
-});
 
-fs.writeFileSync("./play.raw.yml", strData);
+// const strData = YAML.stringify(data, {
 
-fs.writeFileSync("./play.raw.json", JSON.stringify(data, null, 2));
+// });
+
+//fs.writeFileSync("./play.raw.yml", strData);
+
+const data2 = YAML.parse(strData);
+
+fs.writeFileSync("./play.raw.json", JSON.stringify(data2, null, 2));
 //console.info(strData);
 
 
-const ooo = processData(data);
+const ooo = processData(data2);
 fs.writeFileSync("./play.data.json", JSON.stringify(ooo, null, 2));
+wallConnections(ooo);
+fs.writeFileSync("./play.data.updated.json", JSON.stringify(ooo, null, 2));
 
 //console.info(JSON.stringify(ooo, null, 2));
 
