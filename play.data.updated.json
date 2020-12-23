@@ -6,340 +6,54 @@
     ],
     "area": 0
   },
-  "kitchen.anchor.roomCorner": {
-    "type": "anchor",
-    "idSet": [
-      "kitchen",
-      "anchor",
-      "roomCorner"
-    ],
-    "position": {
-      "x": 0,
-      "y": 0
-    }
-  },
-  "kitchen.wall.entryWall": {
+  "kitchen.wall.thick": {
     "type": "wall",
     "idSet": [
       "kitchen",
       "wall",
-      "entryWall"
+      "thick"
     ],
     "left": {
-      "x": -73,
-      "y": 0,
-      "xd": -75.125,
-      "yd": 2.1251,
-      "height": 105
-    },
-    "right": {
       "x": 0,
       "y": 0,
       "xd": 0,
-      "yd": -4.25,
+      "yd": -8,
       "height": 105
     },
-    "length": 73,
-    "thickness": 4.25,
-    "orientation": 0
-  },
-  "kitchen.anchor.kitchenCorner": {
-    "type": "anchor",
-    "idSet": [
-      "kitchen",
-      "anchor",
-      "kitchenCorner"
-    ],
-    "position": {
-      "x": -73,
-      "y": 0
-    }
-  },
-  "kitchen.wall.pantrywall": {
-    "type": "wall",
-    "idSet": [
-      "kitchen",
-      "wall",
-      "pantrywall"
-    ],
-    "left": {
-      "x": -73,
-      "y": -41,
-      "xd": -77.25,
-      "yd": -41,
-      "height": 108
-    },
     "right": {
-      "x": -73,
+      "x": 10,
       "y": 0,
-      "xd": -75.125,
-      "yd": 2.1251,
-      "height": 108
+      "xd": 0.6085144945008825,
+      "yd": -9.838699100999076,
+      "height": 105
     },
-    "length": 41,
-    "thickness": 4.25,
-    "orientation": 90
-  },
-  "kitchen.wall.wall0": {
-    "type": "wall",
-    "idSet": [
-      "kitchen",
-      "wall",
-      "wall0"
-    ],
-    "left": {
-      "x": -48.25,
-      "y": -41,
-      "xd": -50.375,
-      "yd": -38.8749,
-      "height": 108
-    },
-    "right": {
-      "x": -73,
-      "y": -41,
-      "xd": -77.25,
-      "yd": -41,
-      "height": 108
-    },
-    "length": 24.75,
-    "thickness": 4.25,
-    "orientation": 180
-  },
-  "kitchen.wall.cabinetWall": {
-    "type": "wall",
-    "idSet": [
-      "kitchen",
-      "wall",
-      "cabinetWall"
-    ],
-    "left": {
-      "x": -48.25,
-      "y": -171.5,
-      "xd": -48.25,
-      "yd": -171.5,
-      "height": 108
-    },
-    "right": {
-      "x": -48.25,
-      "y": -41,
-      "xd": -50.375,
-      "yd": -38.8749,
-      "height": 108
-    },
-    "length": 130.5,
-    "thickness": 4.25,
-    "orientation": 90
-  },
-  "kitchen.wall.diningWall": {
-    "type": "wall",
-    "idSet": [
-      "kitchen",
-      "wall",
-      "diningWall"
-    ],
-    "left": {
-      "x": -213,
-      "y": -171.5,
-      "xd": -217.9999,
-      "yd": -176.4999,
-      "height": 108
-    },
-    "right": {
-      "x": -48.25,
-      "y": -171.5,
-      "xd": -48.25,
-      "yd": -171.5,
-      "height": 108
-    },
-    "length": 164.75,
-    "thickness": 10,
+    "length": 10,
+    "thickness": 8,
     "orientation": 0
   },
-  "kitchen.wall.windowWall": {
+  "kitchen.wall.thin": {
     "type": "wall",
     "idSet": [
       "kitchen",
       "wall",
-      "windowWall"
+      "thin"
     ],
     "left": {
-      "x": -213,
-      "y": -67.875,
-      "xd": -215.5,
-      "yd": -72.2051,
+      "x": 10,
+      "y": 0,
+      "xd": 0.6085144945008825,
+      "yd": -9.838699100999076,
       "height": 108
     },
     "right": {
-      "x": -213,
-      "y": -171.5,
-      "xd": -217.9999,
-      "yd": -176.4999,
+      "x": 10,
+      "y": 10,
+      "xd": 14,
+      "yd": 10,
       "height": 108
     },
-    "length": 103.625,
-    "thickness": 10,
-    "orientation": -90
-  },
-  "kitchen.anchor.nookRightCorner": {
-    "type": "anchor",
-    "idSet": [
-      "kitchen",
-      "anchor",
-      "nookRightCorner"
-    ],
-    "position": {
-      "x": -213,
-      "y": -67.875
-    }
-  },
-  "kitchen.wall.nook1": {
-    "type": "wall",
-    "idSet": [
-      "kitchen",
-      "wall",
-      "nook1"
-    ],
-    "left": {
-      "x": -237.0001,
-      "y": -26.3058,
-      "xd": -242,
-      "yd": -31.3057,
-      "height": 108
-    },
-    "right": {
-      "x": -213,
-      "y": -67.875,
-      "xd": -215.5,
-      "yd": -72.2051,
-      "height": 108
-    },
-    "length": 48,
-    "thickness": 10,
-    "orientation": -60
-  },
-  "kitchen.wall.nook2": {
-    "type": "wall",
-    "idSet": [
-      "kitchen",
-      "wall",
-      "nook2"
-    ],
-    "left": {
-      "x": -237.0001,
-      "y": 18.6942,
-      "xd": -244.5,
-      "yd": 14.364199999999999,
-      "height": 108
-    },
-    "right": {
-      "x": -237.0001,
-      "y": -26.3058,
-      "xd": -242,
-      "yd": -31.3057,
-      "height": 108
-    },
-    "length": 45,
-    "thickness": 10,
-    "orientation": -90
-  },
-  "kitchen.wall.nook3": {
-    "type": "wall",
-    "idSet": [
-      "kitchen",
-      "wall",
-      "nook3"
-    ],
-    "left": {
-      "x": -213.0002,
-      "y": 60.2634,
-      "xd": -218.0001,
-      "yd": 55.26349999999999,
-      "height": 108
-    },
-    "right": {
-      "x": -237.0001,
-      "y": 18.6942,
-      "xd": -244.5,
-      "yd": 14.364199999999999,
-      "height": 108
-    },
-    "length": 48,
-    "thickness": 10,
-    "orientation": -120
-  },
-  "kitchen.wall.wall1": {
-    "type": "wall",
-    "idSet": [
-      "kitchen",
-      "wall",
-      "wall1"
-    ],
-    "left": {
-      "x": -213.0002,
-      "y": 241.2634,
-      "xd": -223.0002,
-      "yd": 241.2634,
-      "height": 108
-    },
-    "right": {
-      "x": -213.0002,
-      "y": 60.2634,
-      "xd": -218.0001,
-      "yd": 55.26349999999999,
-      "height": 108
-    },
-    "length": 181,
-    "thickness": 10,
-    "orientation": -90
-  },
-  "kitchen.wall.wall2": {
-    "type": "wall",
-    "idSet": [
-      "kitchen",
-      "wall",
-      "wall2"
-    ],
-    "left": {
-      "x": -15.0003,
-      "y": 241.2634,
-      "xd": -17.1252,
-      "yd": 243.3884,
-      "height": 108
-    },
-    "right": {
-      "x": -213.0002,
-      "y": 241.2634,
-      "xd": -217.2502,
-      "yd": 241.2634,
-      "height": 108
-    },
-    "length": 198,
-    "thickness": 4.25,
-    "orientation": -180
-  },
-  "kitchen.wall.wall3": {
-    "type": "wall",
-    "idSet": [
-      "kitchen",
-      "wall",
-      "wall3"
-    ],
-    "left": {
-      "x": -15.0003,
-      "y": 60.2633,
-      "xd": -10.7503,
-      "yd": 60.2633,
-      "height": 108
-    },
-    "right": {
-      "x": -15.0003,
-      "y": 241.2634,
-      "xd": -17.1252,
-      "yd": 243.3884,
-      "height": 108
-    },
-    "length": 181,
-    "thickness": 4.25,
-    "orientation": -270
+    "length": 10,
+    "thickness": 4,
+    "orientation": 90
   }
 }

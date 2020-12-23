@@ -1,0 +1,124 @@
+{
+  "0:0": [
+    {
+      "wall": {
+        "type": "wall",
+        "idSet": [
+          "kitchen",
+          "wall",
+          "thick"
+        ],
+        "left": {
+          "x": 0,
+          "y": 0,
+          "xd": 0,
+          "yd": -8,
+          "height": 105
+        },
+        "right": {
+          "x": 10,
+          "y": 0,
+          "xd": 10,
+          "yd": -8,
+          "height": 105
+        },
+        "length": 10,
+        "thickness": 8,
+        "orientation": 0
+      },
+      "leftId": "0:0",
+      "rightId": "10:0"
+    }
+  ],
+  "10:0": [
+    {
+      "wall": {
+        "type": "wall",
+        "idSet": [
+          "kitchen",
+          "wall",
+          "thick"
+        ],
+        "left": {
+          "x": 0,
+          "y": 0,
+          "xd": 0,
+          "yd": -8,
+          "height": 105
+        },
+        "right": {
+          "x": 10,
+          "y": 0,
+          "xd": 10,
+          "yd": -8,
+          "height": 105
+        },
+        "length": 10,
+        "thickness": 8,
+        "orientation": 0
+      },
+      "leftId": "0:0",
+      "rightId": "10:0"
+    },
+    {
+      "wall": {
+        "type": "wall",
+        "idSet": [
+          "kitchen",
+          "wall",
+          "thin"
+        ],
+        "left": {
+          "x": 10,
+          "y": 0,
+          "xd": 14,
+          "yd": 0,
+          "height": 108
+        },
+        "right": {
+          "x": 10,
+          "y": 10,
+          "xd": 14,
+          "yd": 10,
+          "height": 108
+        },
+        "length": 10,
+        "thickness": 4,
+        "orientation": 90
+      },
+      "leftId": "10:0",
+      "rightId": "10:10"
+    }
+  ],
+  "10:10": [
+    {
+      "wall": {
+        "type": "wall",
+        "idSet": [
+          "kitchen",
+          "wall",
+          "thin"
+        ],
+        "left": {
+          "x": 10,
+          "y": 0,
+          "xd": 14,
+          "yd": 0,
+          "height": 108
+        },
+        "right": {
+          "x": 10,
+          "y": 10,
+          "xd": 14,
+          "yd": 10,
+          "height": 108
+        },
+        "length": 10,
+        "thickness": 4,
+        "orientation": 90
+      },
+      "leftId": "10:0",
+      "rightId": "10:10"
+    }
+  ]
+}

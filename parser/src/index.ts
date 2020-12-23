@@ -522,6 +522,10 @@ function wallConnections(data: { [name: string]: Element }) {
         return data;
     }, {} as { [data: string]: WallSegment[] });
 
+
+    fs.writeFileSync("./play.corners.json", JSON.stringify(corners, null, 2));
+    
+
     // in each corner, we should have AT MOST 2 walls
     // single points indicate wall ends
 
@@ -533,7 +537,7 @@ function wallConnections(data: { [name: string]: Element }) {
 
             if (corner.length === 1) {
                 // end segment
-                if (cornerId === corner[0].rightId) {
+                if (cornerId === corner[0].leftId) {
                     // start new path
                     wallPaths.push(corner[0]);
                 }
@@ -543,16 +547,16 @@ function wallConnections(data: { [name: string]: Element }) {
                 if (cornerId === corner[0].leftId) {
                     // the other one MUST be thr right corner
                     if (cornerId === corner[1].rightId) {
-                        corner[0].rightSegment = corner[1];
-                        corner[1].leftSegment = corner[0];
+                        corner[0].leftSegment = corner[1];
+                        corner[1].rightSegment = corner[0];
                     } else {
                         throw new Error("incorrent segment linking: " + cornerId);
                     }
                 } else if (cornerId === corner[1].leftId) {
                     // the other one MUST be thr right corner
                     if (cornerId === corner[0].rightId) {
-                        corner[1].rightSegment = corner[0];
-                        corner[0].leftSegment = corner[1];
+                        corner[1].leftSegment = corner[0];
+                        corner[0].rightSegment = corner[1];
                     } else {
                         throw new Error("incorrent segment linking: " + cornerId);
                     }
@@ -578,6 +582,29 @@ function wallConnections(data: { [name: string]: Element }) {
 
     }
 
+    function cos(angle: number) {
+        let cosA = Math.cos(angle * (Math.PI / 180));
+        if (Math.abs(cosA) < 0.000001) {
+            cosA = 0;
+        }
+        return cosA;
+    }
+
+    function sin(angle: number) {
+        let sinA = Math.sin(angle * (Math.PI / 180));
+        if (Math.abs(sinA) < 0.000001) {
+            sinA = 0;
+        }
+        return sinA;
+    }
+
+    function acos(value: number) {
+        let ang = Math.acos(value) / (Math.PI / 180);
+
+        return ang;
+
+    }
+
 
     function processPath(head: WallSegment) {
         // head we can leave alone
@@ -586,6 +613,27 @@ function wallConnections(data: { [name: string]: Element }) {
 
             const leftWall = current.wall;
             const rightWall = current.rightSegment.wall;
+
+            const LRd = leftWall.orientation - (rightWall.orientation - 90);
+            const Lsm = rightWall.thickness / cos(LRd);
+            const Rsm = leftWall.thickness / cos(LRd);
+            const f = Math.sqrt(
+                Lsm * Lsm +
+                Rsm * Rsm +
+                2 * Lsm * Rsm * cos(rightWall.orientation - leftWall.orientation)
+            );
+
+            const RRd = acos(leftWall.thickness / f);
+            //const fd = RRd + (rightWall.orientation - 90) - 90;
+            const fd = RRd ;
+
+            const dx = f + sin(fd);
+            const dy = f + cos(fd);
+
+            leftWall.right.xd = leftWall.right.x - dx;
+            leftWall.right.yd = leftWall.right.y - dy;
+            rightWall.left.xd = leftWall.right.xd;
+            rightWall.left.yd = leftWall.right.yd;
 
             //const orientationDiff = (180 - (leftWall.orientation - rightWall.orientation)) / 2 + leftWall.orientation;
 
@@ -607,22 +655,22 @@ function wallConnections(data: { [name: string]: Element }) {
             // rightWall.right.yd = rightWall.right.y - depthOffsetRight.cy;
 
             ////////////////////
-            const orientationDiff = (180 - (leftWall.orientation - rightWall.orientation)  + leftWall.orientation)/2;
+            // const orientationDiff = (180 - (leftWall.orientation - rightWall.orientation)  + leftWall.orientation)/2;
 
-            let cosA = Math.cos(orientationDiff * (Math.PI / 180));
-            if (Math.abs(cosA) < 0.000001) {
-                cosA = 0;
-            }
+            // let cosA = Math.cos(orientationDiff * (Math.PI / 180));
+            // if (Math.abs(cosA) < 0.000001) {
+            //     cosA = 0;
+            // }
 
-            const lth = roundLength(cosA ? leftWall.thickness * cosA : 0);
-            const depthOffsetLeft = calculateOffset(orientationDiff, lth);
-            leftWall.left.xd = leftWall.left.x - depthOffsetLeft.cx;
-            leftWall.left.yd = leftWall.left.y - depthOffsetLeft.cy;
+            // const lth = roundLength(cosA ? leftWall.thickness * cosA : 0);
+            // const depthOffsetLeft = calculateOffset(orientationDiff, lth);
+            // leftWall.left.xd = leftWall.left.x - depthOffsetLeft.cx;
+            // leftWall.left.yd = leftWall.left.y - depthOffsetLeft.cy;
 
-            const rth = roundLength(cosA ? rightWall.thickness * cosA : 0);
-            const depthOffsetRight = calculateOffset(orientationDiff, rth);
-            rightWall.right.xd = rightWall.right.x - depthOffsetRight.cx;
-            rightWall.right.yd = rightWall.right.y - depthOffsetRight.cy;
+            // const rth = roundLength(cosA ? rightWall.thickness * cosA : 0);
+            // const depthOffsetRight = calculateOffset(orientationDiff, rth);
+            // rightWall.right.xd = rightWall.right.x - depthOffsetRight.cx;
+            // rightWall.right.yd = rightWall.right.y - depthOffsetRight.cy;
 
             ////////
 
