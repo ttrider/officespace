@@ -1,119 +1,8 @@
 import YAML from 'yaml'
 import fs from "fs";
-
-
-function roundLength(value: number) {
-    return Math.round(value * 10000) / 10000;
-}
-
-function normalizeOrientation(angle: number) {
-    angle = angle % 360;
-
-    // force it to be the positive remainder, so that 0 <= angle < 360  
-    angle = (angle + 360) % 360;
-
-    // force into the minimum absolute value residue class, so that -180 < angle <= 180  
-    if (angle > 180) { angle -= 360; }
-    return angle;
-}
-
-function parseLength(input?: string, supportDirection?: boolean) {
-    if (!input) { throw new Error("empty length string"); }
-
-    // console.info(`================================`);
-    // console.info(`input: ${input}`);
-
-    // split into parts
-    const inputParts = input.trim().split(" ").filter(i => i);
-    if (inputParts.length === 0) { throw new Error("empty length string"); }
-
-    let lengthParts: number[] = [];
-    let reverse = false;
-
-    for (let inputPart of inputParts) {
-        inputPart = inputPart.trim().toLowerCase();
-
-        // console.info(`--------------------------------`);
-        // console.info(inputPart);
-
-        if (supportDirection && inputPart === "left") {
-            reverse = true;
-            continue;
-        } else if (supportDirection && inputPart === "right") {
-            reverse = false;
-            continue;
-        }
-
-        const regex = /(\d+)((\.\d+)|(\-(\d+)\/(2|4|8|16)+))?('|"|ft|in)/i;
-
-        const match = regex.exec(inputPart);
-        if (!match) { throw new Error("invalid length part: " + inputParts); }
-
-        //console.info(match);
-
-
-        // group 1: whole number part
-        let valNum = parseInt(match[1]);
-        if (isNaN(valNum)) { throw new Error("invalid length part: " + inputParts); }
-
-        // decimal part
-        if (match[3]) {
-            const decNum = parseInt("0" + match[3]);
-            if (isNaN(decNum)) { throw new Error("invalid length part: " + inputParts); }
-            valNum += decNum;
-        } else if (match[4]) {
-            // we have fractional part
-            const dt = parseInt(match[5]);
-            if (isNaN(dt)) { throw new Error("invalid length part: " + inputParts); }
-            const db = parseInt(match[6]);
-            if (isNaN(db)) { throw new Error("invalid length part: " + inputParts); }
-
-            valNum += (dt / db);
-        }
-
-        const units = match[7] ?? "";
-        switch (units) {
-            case "'":
-            case "ft":
-                // converting to inches
-                valNum *= 12;
-                break;
-            case "\"":
-            case "in":
-                // do nothing
-                break;
-            default:
-                throw new Error("invalid length part: " + inputParts);
-        }
-
-        // console.info(`valNum: ${valNum}`);
-        lengthParts.push(valNum);
-    }
-
-    const totalLength = roundLength(lengthParts.reduce((sum, item) => sum + item, 0));
-
-    // console.info(`totalLength: ${totalLength}`);
-    // console.info(`================================`);
-    return reverse ? -totalLength : totalLength;
-}
-
-function calculateOffset(orientation: number, length: number) {
-    let cosA = Math.cos(orientation * (Math.PI / 180));
-    if (Math.abs(cosA) < 0.000001) {
-        cosA = 0;
-    }
-    let sinA = Math.sin(orientation * (Math.PI / 180));
-    if (Math.abs(sinA) < 0.000001) {
-        sinA = 0;
-    }
-
-    const cx = roundLength(cosA ? length * cosA : 0);
-    const cy = roundLength(sinA ? length * sinA : 0);
-
-    //console.log(`orientation: ${orientation}, length: ${length} cx: ${cx}, cy: ${cy}`);
-    return { cx, cy };
-}
-
+import { roundToPrecision, parseLength, normalizeOrientation, safeCos, safeAcos, safeSin } from "./utils";
+import { AnchorItem, WallItem } from './dsl';
+import { AnchorElement, Element, SpaceElement, WallCorner, WallElement } from "./dom";
 
 
 function buildSvg(data: { [name: string]: Element }) {
@@ -126,7 +15,7 @@ function buildSvg(data: { [name: string]: Element }) {
     let bottom = 0;
 
     const lines: string[] = [];
-    const anchors: string[] = [];
+
 
     for (const key in data) {
         if (Object.prototype.hasOwnProperty.call(data, key)) {
@@ -219,67 +108,20 @@ function buildSvg2(data: { [name: string]: Element }) {
 const innerWallThickness = parseLength("4-1/4\"");
 const innerWallHeight = parseLength("9'");
 
-interface Element {
-    type: string;
-    idSet: string[];
-}
-
-interface SpaceElement extends Element {
-    area?: number
-}
-
-interface AnchorElement extends Element {
-    position: {
-        x: number,
-        y: number
-    }
-}
-
-class WallCorner {
-
-    x: number;
-    y: number;
-    xd: number;
-    yd: number;
-    height: number;
-
-    constructor(x: number, y: number, height?: number) {
-        this.x = roundLength(x);
-        this.y = roundLength(y);
-        this.xd = 0;
-        this.yd = 0;
-        this.height = roundLength(height ?? 0);
-    }
-
-    get id() {
-        return this.x.toString() + ":" + this.y.toString();
-    }
-
-}
-
-interface WallElement extends Element {
-    left: WallCorner;
-    right: WallCorner;
-    orientation: number;
-    length: number;
-    thickness: number;
-}
 
 
-interface AnchorItem {
-    name: string;
-}
 
-interface WallItem {
 
-    name?: string;
-    height?: string | { left: string; right: string };
-    thickness?: string;
-    length?: string;
-    to?: string;
-    from?: string;
-    depth?: string;
-}
+
+
+
+
+
+
+
+
+
+
 
 function processData(input: any) {
 
@@ -340,10 +182,6 @@ function processData(input: any) {
 
                 for (const fpItem of space.floorPlan) {
 
-                    // console.info(JSON.stringify(current));
-                    // console.info(JSON.stringify(fpItem));
-
-
                     if (fpItem.$anchor) {
                         processAnchor(fpItem.$anchor);
                     } else if (fpItem.$rotate) {
@@ -357,14 +195,7 @@ function processData(input: any) {
     }
 
 
-    // post process wall connections
-
-
-
-
     return objects;
-
-
 
 
     function processAnchor(item?: AnchorItem | string) {
@@ -444,22 +275,8 @@ function processData(input: any) {
         } else {
 
             let length = parseLength(item.length, true);
-
-            const { cx, cy } = calculateOffset(current.orientation, length)
-
-            //console.info(`length: ${length}`);
-
-            // let cosA = Math.cos(current.orientation * (Math.PI / 180));
-            // if (Math.abs(cosA) < 0.000001) {
-            //     cosA = 0;
-            // }
-            // let sinA = Math.sin(current.orientation * (Math.PI / 180));
-            // if (Math.abs(sinA) < 0.000001) {
-            //     sinA = 0;
-            // }
-
-            // const cx = roundLength(cosA ? length / cosA : 0);
-            // const cy = roundLength(sinA ? length / sinA : 0);
+            const cx = roundToPrecision(length * safeCos(current.orientation));
+            const cy = roundToPrecision(length * safeSin(current.orientation));
 
             const endPosition = new WallCorner(current.x + cx, current.y + cy, current.height);
 
@@ -490,12 +307,13 @@ function processData(input: any) {
             }
 
             // calculate depths
-            const depthOffset = calculateOffset(current.orientation - 90, current.wallThickness);
+            const dcx = roundToPrecision(current.wallThickness * safeCos(current.orientation - 90));
+            const dcy = roundToPrecision(current.wallThickness * safeSin(current.orientation - 90));
 
-            left.xd = left.x + depthOffset.cx;
-            left.yd = left.y + depthOffset.cy;
-            right.xd = right.x + depthOffset.cx;
-            right.yd = right.y + depthOffset.cy;
+            left.xd = left.x + dcx;
+            left.yd = left.y + dcy;
+            right.xd = right.x + dcx;
+            right.yd = right.y + dcy;
 
             objects[idSet.join(".")] = {
                 type: "wall",
@@ -598,28 +416,6 @@ function wallConnections(data: { [name: string]: Element }) {
 
     }
 
-    function cos(angle: number) {
-        let cosA = Math.cos(angle * (Math.PI / 180));
-        if (Math.abs(cosA) < 0.000001) {
-            cosA = 0;
-        }
-        return cosA;
-    }
-
-    function sin(angle: number) {
-        let sinA = Math.sin(angle * (Math.PI / 180));
-        if (Math.abs(sinA) < 0.000001) {
-            sinA = 0;
-        }
-        return sinA;
-    }
-
-    function acos(value: number) {
-        let ang = Math.acos(value) / (Math.PI / 180);
-
-        return roundLength(ang);
-
-    }
 
 
 
@@ -635,22 +431,22 @@ function wallConnections(data: { [name: string]: Element }) {
 
             const LRd = normalizeOrientation(rightWall.orientation - leftWall.orientation);
 
-            const cosLRd = cos(LRd - 90);
+            const cosLRd = safeCos(LRd - 90);
             const Lsm = rightWall.thickness / (cosLRd ? cosLRd : 1);
             const Rsm = leftWall.thickness / (cosLRd ? cosLRd : 1);
-            let f = roundLength(Math.sqrt(Math.abs(
+            const f = roundToPrecision(Math.sqrt(Math.abs(
                 Lsm * Lsm +
                 Rsm * Rsm +
-                2 * Lsm * Rsm * cos(normalizeOrientation(rightWall.orientation - leftWall.orientation) - 180)
+                2 * Lsm * Rsm * safeCos(normalizeOrientation(rightWall.orientation - leftWall.orientation) - 180)
             )));
 
 
-            const RRd = acos(leftWall.thickness / f);
-            let fd = (LRd < 0) ? (RRd - leftWall.orientation) : (RRd + leftWall.orientation);
+            const RRd = safeAcos(leftWall.thickness / f);
+            const fd = (LRd < 0) ? (RRd - leftWall.orientation) : (RRd + leftWall.orientation);
 
 
-            let dx = roundLength(f * sin(fd));
-            let dy = roundLength(f * cos(fd));
+            let dx = roundToPrecision(f * safeSin(fd));
+            const dy = roundToPrecision(f * safeCos(fd));
 
             if (LRd < 0) {
                 dx = -dx;
@@ -717,7 +513,7 @@ interface WallSegment {
 
 
 
-const bd = fs.readFileSync("./play.raw.yml");
+const bd = fs.readFileSync("../play.raw.yml");
 const strData = (bd ?? "").toString();
 
 

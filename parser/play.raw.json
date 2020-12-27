@@ -1,0 +1,122 @@
+{
+  "spaces": {
+    "kitchen": {
+      "floorPlan": [
+        {
+          "$anchor": "roomCorner"
+        },
+        {
+          "wall": {
+            "name": "entryWall",
+            "length": "73\" left",
+            "height": "105.5\"",
+            "thickness": "4-1/4\""
+          }
+        },
+        {
+          "$rotate": "90deg right"
+        },
+        {
+          "$anchor": "kitchenCorner"
+        },
+        {
+          "wall": {
+            "name": "pantrywall",
+            "length": "41\" left"
+          }
+        },
+        {
+          "$rotate": "90deg cw"
+        },
+        {
+          "wall": {
+            "length": "24-3/4\" left"
+          }
+        },
+        {
+          "$rotate": "90deg ccw"
+        },
+        {
+          "wall": {
+            "name": "cabinetWall",
+            "length": "46-3/4\" 35.5\" 48-3/4\" left"
+          }
+        },
+        {
+          "$rotate": "90deg ccw"
+        },
+        {
+          "wall": {
+            "name": "diningWall",
+            "length": "164-3/4\" left"
+          }
+        },
+        {
+          "$rotate": "90deg ccw"
+        },
+        {
+          "wall": {
+            "name": "windowWall",
+            "length": "34-7/8\" 1.5\" 1\" 66-3/4\" left",
+            "thickness": "10\""
+          }
+        },
+        {
+          "$anchor": "nookRightCorner"
+        },
+        {
+          "$rotate": "30deg cw"
+        },
+        {
+          "wall": {
+            "name": "nook1",
+            "length": "48\" left"
+          }
+        },
+        {
+          "$rotate": "-30 deg cw"
+        },
+        {
+          "wall": {
+            "name": "nook2",
+            "length": "45\" left"
+          }
+        },
+        {
+          "$rotate": "-30 deg cw"
+        },
+        {
+          "wall": {
+            "name": "nook3",
+            "length": "48\" left"
+          }
+        },
+        {
+          "$rotate": "30 deg cw"
+        },
+        {
+          "wall": {
+            "length": "155.5\" 26\" left"
+          }
+        },
+        {
+          "$rotate": "90 deg ccw"
+        },
+        {
+          "wall": {
+            "length": "198\" left"
+          }
+        },
+        {
+          "$rotate": "90 deg ccw"
+        },
+        {
+          "wall": {
+            "length": "155.5\" 26\" left",
+            "thickness": "4-1/4\""
+          }
+        }
+      ]
+    }
+  }
+}
