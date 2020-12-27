@@ -4,6 +4,9 @@ export const parseErrors = {
     ERR001: (offset?: number) => new ParseError("ERR001", "Empty value", "", offset ?? 0),
     ERR002: (value: string, offset?: number) => new ParseError("ERR002", `Invalid format: ${value}`, value, offset ?? 0),
 
+
+    ERR003: (value: string, offset?: number) => new ParseError("ERR003", `Not a number: ${value}`, value, offset ?? 0),
+
 }
 
 

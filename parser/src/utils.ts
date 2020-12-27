@@ -131,3 +131,39 @@ export function parseLength(input?: string, supportDirection?: boolean) {
     const totalLength = roundToPrecision(lengthParts.reduce((sum, item) => sum + item, 0));
     return reverse ? -totalLength : totalLength;
 }
+
+export function parseAngle(input?: string) {
+    if (!input) { throw parseErrors.ERR001() }
+
+    const regex = /(-)?(([0-9]{1,3})|(@[\w]+))(\s?deg?(\s((cw)|(ccw)|(left)|(right)))?)?/gm;
+
+    const match = regex.exec(input.trim().toLowerCase());
+    if (!match) {
+        throw parseErrors.ERR002(input, 0);
+    }
+
+    if (match[4]) {
+        throw new Error("unsupported mode with variables");
+    }
+
+    if (!match[3]) {
+        throw parseErrors.ERR003(input, 0);
+    }
+
+    let value = parseInt(match[3]);
+    if (isNaN(value)) {
+        throw parseErrors.ERR003(input, 0);
+    }
+
+    if (match[1]) {
+        value = -value;
+    }
+    if (match[10]) {
+        value = -value;
+    }
+    if (match[9]) {
+        value = -value;
+    }
+
+    return value;
+}
