@@ -1,14 +1,20 @@
 {
-  "kitchen": {
-    "type": "Space",
+  "floor.main.space.kitchen": {
+    "type": "space",
     "idSet": [
+      "floor",
+      "main",
+      "space",
       "kitchen"
     ],
     "area": 0
   },
-  "kitchen.anchor.roomCorner": {
+  "floor.main.space.kitchen.anchor.roomCorner": {
     "type": "anchor",
     "idSet": [
+      "floor",
+      "main",
+      "space",
       "kitchen",
       "anchor",
       "roomCorner"
@@ -18,9 +24,12 @@
       "y": 0
     }
   },
-  "kitchen.wall.entryWall": {
+  "floor.main.space.kitchen.wall.entryWall": {
     "type": "wall",
     "idSet": [
+      "floor",
+      "main",
+      "space",
       "kitchen",
       "wall",
       "entryWall"
@@ -28,7 +37,7 @@
     "left": {
       "x": -73,
       "y": 0,
-      "xd": -73,
+      "xd": -68.75,
       "yd": -4.25,
       "height": 105.5
     },
@@ -43,9 +52,12 @@
     "thickness": 4.25,
     "orientation": 0
   },
-  "kitchen.anchor.kitchenCorner": {
+  "floor.main.space.kitchen.anchor.kitchenCorner": {
     "type": "anchor",
     "idSet": [
+      "floor",
+      "main",
+      "space",
       "kitchen",
       "anchor",
       "kitchenCorner"
@@ -55,9 +67,12 @@
       "y": 0
     }
   },
-  "kitchen.wall.pantrywall": {
+  "floor.main.space.kitchen.wall.pantrywall": {
     "type": "wall",
     "idSet": [
+      "floor",
+      "main",
+      "space",
       "kitchen",
       "wall",
       "pantrywall"
@@ -66,23 +81,26 @@
       "x": -73,
       "y": -41,
       "xd": -68.75,
-      "yd": -41,
+      "yd": -36.75,
       "height": 108
     },
     "right": {
       "x": -73,
       "y": 0,
       "xd": -68.75,
-      "yd": 0,
+      "yd": -4.25,
       "height": 108
     },
     "length": 41,
     "thickness": 4.25,
     "orientation": 90
   },
-  "kitchen.wall.wall0": {
+  "floor.main.space.kitchen.wall.wall0": {
     "type": "wall",
     "idSet": [
+      "floor",
+      "main",
+      "space",
       "kitchen",
       "wall",
       "wall0"
@@ -90,14 +108,14 @@
     "left": {
       "x": -48.25,
       "y": -41,
-      "xd": -48.25,
+      "xd": -44,
       "yd": -36.75,
       "height": 108
     },
     "right": {
       "x": -73,
       "y": -41,
-      "xd": -73,
+      "xd": -68.75,
       "yd": -36.75,
       "height": 108
     },
@@ -105,9 +123,12 @@
     "thickness": 4.25,
     "orientation": 180
   },
-  "kitchen.wall.cabinetWall": {
+  "floor.main.space.kitchen.wall.cabinetWall": {
     "type": "wall",
     "idSet": [
+      "floor",
+      "main",
+      "space",
       "kitchen",
       "wall",
       "cabinetWall"
@@ -116,23 +137,26 @@
       "x": -48.25,
       "y": -172,
       "xd": -44,
-      "yd": -172,
+      "yd": -176.25,
       "height": 108
     },
     "right": {
       "x": -48.25,
       "y": -41,
       "xd": -44,
-      "yd": -41,
+      "yd": -36.75,
       "height": 108
     },
     "length": 131,
     "thickness": 4.25,
     "orientation": 90
   },
-  "kitchen.wall.diningWall": {
+  "floor.main.space.kitchen.wall.diningWall": {
     "type": "wall",
     "idSet": [
+      "floor",
+      "main",
+      "space",
       "kitchen",
       "wall",
       "diningWall"
@@ -140,14 +164,14 @@
     "left": {
       "x": -213,
       "y": -172,
-      "xd": -213,
-      "yd": -176.25,
+      "xd": -222.9997,
+      "yd": -176.2496,
       "height": 108
     },
     "right": {
       "x": -48.25,
       "y": -172,
-      "xd": -48.25,
+      "xd": -44,
       "yd": -176.25,
       "height": 108
     },
@@ -155,9 +179,12 @@
     "thickness": 4.25,
     "orientation": 0
   },
-  "kitchen.wall.windowWall": {
+  "floor.main.space.kitchen.wall.windowWall": {
     "type": "wall",
     "idSet": [
+      "floor",
+      "main",
+      "space",
       "kitchen",
       "wall",
       "windowWall"
@@ -165,24 +192,27 @@
     "left": {
       "x": -213,
       "y": -67.875,
-      "xd": -223,
-      "yd": -67.875,
+      "xd": -223.0017,
+      "yd": -70.5514,
       "height": 108
     },
     "right": {
       "x": -213,
       "y": -172,
-      "xd": -223,
-      "yd": -172,
+      "xd": -222.9997,
+      "yd": -176.2496,
       "height": 108
     },
     "length": 104.125,
     "thickness": 10,
     "orientation": -90
   },
-  "kitchen.anchor.nookRightCorner": {
+  "floor.main.space.kitchen.anchor.nookRightCorner": {
     "type": "anchor",
     "idSet": [
+      "floor",
+      "main",
+      "space",
       "kitchen",
       "anchor",
       "nookRightCorner"
@@ -192,9 +222,12 @@
       "y": -67.875
     }
   },
-  "kitchen.wall.nook1": {
+  "floor.main.space.kitchen.wall.nook1": {
     "type": "wall",
     "idSet": [
+      "floor",
+      "main",
+      "space",
       "kitchen",
       "wall",
       "nook1"
@@ -202,24 +235,27 @@
     "left": {
       "x": -237,
       "y": -26.307,
-      "xd": -245.66,
-      "yd": -31.307,
+      "xd": -246.9996,
+      "yd": -28.9896,
       "height": 108
     },
     "right": {
       "x": -213,
       "y": -67.875,
-      "xd": -221.66,
-      "yd": -72.875,
+      "xd": -223.0017,
+      "yd": -70.5514,
       "height": 108
     },
     "length": 48,
     "thickness": 10,
     "orientation": -60
   },
-  "kitchen.wall.nook2": {
+  "floor.main.space.kitchen.wall.nook2": {
     "type": "wall",
     "idSet": [
+      "floor",
+      "main",
+      "space",
       "kitchen",
       "wall",
       "nook2"
@@ -227,24 +263,27 @@
     "left": {
       "x": -237,
       "y": 18.693,
-      "xd": -247,
-      "yd": 18.693,
+      "xd": -247.0017,
+      "yd": 21.369400000000002,
       "height": 108
     },
     "right": {
       "x": -237,
       "y": -26.307,
-      "xd": -247,
-      "yd": -26.307,
+      "xd": -246.9996,
+      "yd": -28.9896,
       "height": 108
     },
     "length": 45,
     "thickness": 10,
     "orientation": -90
   },
-  "kitchen.wall.nook3": {
+  "floor.main.space.kitchen.wall.nook3": {
     "type": "wall",
     "idSet": [
+      "floor",
+      "main",
+      "space",
       "kitchen",
       "wall",
       "nook3"
@@ -252,24 +291,27 @@
     "left": {
       "x": -213,
       "y": 60.261,
-      "xd": -221.66,
-      "yd": 65.261,
+      "xd": -222.9996,
+      "yd": 62.9436,
       "height": 108
     },
     "right": {
       "x": -237,
       "y": 18.693,
-      "xd": -245.66,
-      "yd": 23.693,
+      "xd": -247.0017,
+      "yd": 21.369400000000002,
       "height": 108
     },
     "length": 48,
     "thickness": 10,
     "orientation": -120
   },
-  "kitchen.wall.wall1": {
+  "floor.main.space.kitchen.wall.wall1": {
     "type": "wall",
     "idSet": [
+      "floor",
+      "main",
+      "space",
       "kitchen",
       "wall",
       "wall1"
@@ -277,24 +319,27 @@
     "left": {
       "x": -213,
       "y": 241.761,
-      "xd": -223,
-      "yd": 241.761,
+      "xd": -222.9999,
+      "yd": 251.7609,
       "height": 108
     },
     "right": {
       "x": -213,
       "y": 60.261,
-      "xd": -223,
-      "yd": 60.261,
+      "xd": -222.9996,
+      "yd": 62.9436,
       "height": 108
     },
     "length": 181.5,
     "thickness": 10,
     "orientation": -90
   },
-  "kitchen.wall.wall2": {
+  "floor.main.space.kitchen.wall.wall2": {
     "type": "wall",
     "idSet": [
+      "floor",
+      "main",
+      "space",
       "kitchen",
       "wall",
       "wall2"
@@ -302,24 +347,27 @@
     "left": {
       "x": -15,
       "y": 241.761,
-      "xd": -15,
-      "yd": 251.761,
+      "xd": -10.750399999999999,
+      "yd": 251.76069999999999,
       "height": 108
     },
     "right": {
       "x": -213,
       "y": 241.761,
-      "xd": -213,
-      "yd": 251.761,
+      "xd": -222.9999,
+      "yd": 251.7609,
       "height": 108
     },
     "length": 198,
     "thickness": 10,
     "orientation": 180
   },
-  "kitchen.wall.wall3": {
+  "floor.main.space.kitchen.wall.wall3": {
     "type": "wall",
     "idSet": [
+      "floor",
+      "main",
+      "space",
       "kitchen",
       "wall",
       "wall3"
@@ -334,8 +382,8 @@
     "right": {
       "x": -15,
       "y": 241.761,
-      "xd": -10.75,
-      "yd": 241.761,
+      "xd": -10.750399999999999,
+      "yd": 251.76069999999999,
       "height": 108
     },
     "length": 181.5,

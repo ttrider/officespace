@@ -1,3 +1,5 @@
+import { Context } from "./context";
+import { FloorPlanParseContext } from "./floorPlan";
 import { roundToPrecision } from "./utils";
 
 export interface Element {
@@ -20,8 +22,30 @@ export interface WallElement extends Element {
     thickness: number;
 }
 
-export interface SpaceElement extends Element {
-    area?: number
+export class SpaceElement implements Element {
+    context: Context;
+    area?: number;
+    type = "space";
+    idSet: string[];
+    floorPlanParseContextValue?: FloorPlanParseContext;
+    wallElements: WallElement[] = [];
+    wallSegments: WallSegment[] = [];
+
+    constructor(context: Context, name: string, floor?: string) {
+        this.idSet = ["floor", floor ?? "main", "space", name];
+        this.context = context;
+    }
+
+    get id() {
+        return this.idSet.join(".");
+    }
+
+    get floorPlanParseContext() {
+        if (!this.floorPlanParseContextValue) {
+            this.floorPlanParseContextValue = new FloorPlanParseContext(this);
+        }
+        return this.floorPlanParseContextValue;
+    }
 }
 
 export class WallCorner {
@@ -44,4 +68,12 @@ export class WallCorner {
         return this.x.toString() + ":" + this.y.toString();
     }
 
+}
+
+export interface WallSegment {
+    leftSegment?: WallSegment;
+    leftId: string;
+    rightSegment?: WallSegment;
+    rightId: string;
+    wall: WallElement;
 }
