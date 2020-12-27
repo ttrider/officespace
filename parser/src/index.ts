@@ -3,7 +3,18 @@ import fs from "fs";
 
 
 function roundLength(value: number) {
-    return Math.floor(value * 10000) / 10000;
+    return Math.round(value * 10000) / 10000;
+}
+
+function normalizeOrientation(angle: number) {
+    angle = angle % 360;
+
+    // force it to be the positive remainder, so that 0 <= angle < 360  
+    angle = (angle + 360) % 360;
+
+    // force into the minimum absolute value residue class, so that -180 < angle <= 180  
+    if (angle > 180) { angle -= 360; }
+    return angle;
 }
 
 function parseLength(input?: string, supportDirection?: boolean) {
@@ -173,6 +184,11 @@ function buildSvg2(data: { [name: string]: Element }) {
                 right = Math.max(right, wall.left.x, wall.right.x);
                 top = Math.min(top, wall.left.y, wall.right.y);
                 bottom = Math.max(bottom, wall.left.y, wall.right.y);
+
+                left = Math.min(left, wall.left.xd, wall.right.xd);
+                right = Math.max(right, wall.left.xd, wall.right.xd);
+                top = Math.min(top, wall.left.yd, wall.right.yd);
+                bottom = Math.max(bottom, wall.left.yd, wall.right.yd);
 
                 linesInner.push(`M ${wall.left.x * mult},${wall.left.y * mult} L ${wall.right.x * mult},${wall.right.y * mult}`);
 
@@ -405,7 +421,7 @@ function processData(input: any) {
         }
 
         current.orientation += value;
-        current.orientation = current.orientation % 360;
+        current.orientation = normalizeOrientation(current.orientation);
     }
 
     function processWall(item: WallItem) {
@@ -524,7 +540,7 @@ function wallConnections(data: { [name: string]: Element }) {
 
 
     fs.writeFileSync("./play.corners.json", JSON.stringify(corners, null, 2));
-    
+
 
     // in each corner, we should have AT MOST 2 walls
     // single points indicate wall ends
@@ -601,9 +617,12 @@ function wallConnections(data: { [name: string]: Element }) {
     function acos(value: number) {
         let ang = Math.acos(value) / (Math.PI / 180);
 
-        return ang;
+        return roundLength(ang);
 
     }
+
+
+
 
 
     function processPath(head: WallSegment) {
@@ -614,66 +633,54 @@ function wallConnections(data: { [name: string]: Element }) {
             const leftWall = current.wall;
             const rightWall = current.rightSegment.wall;
 
-            const LRd = leftWall.orientation - (rightWall.orientation - 90);
-            const Lsm = rightWall.thickness / cos(LRd);
-            const Rsm = leftWall.thickness / cos(LRd);
-            const f = Math.sqrt(
+            const LRd = normalizeOrientation(rightWall.orientation - leftWall.orientation);
+
+            const cosLRd = cos(LRd - 90);
+            const Lsm = rightWall.thickness / (cosLRd ? cosLRd : 1);
+            const Rsm = leftWall.thickness / (cosLRd ? cosLRd : 1);
+            let f = roundLength(Math.sqrt(Math.abs(
                 Lsm * Lsm +
                 Rsm * Rsm +
-                2 * Lsm * Rsm * cos(rightWall.orientation - leftWall.orientation)
-            );
+                2 * Lsm * Rsm * cos(normalizeOrientation(rightWall.orientation - leftWall.orientation) - 180)
+            )));
+
 
             const RRd = acos(leftWall.thickness / f);
-            //const fd = RRd + (rightWall.orientation - 90) - 90;
-            const fd = RRd ;
+            let fd = (LRd < 0) ? (RRd - leftWall.orientation) : (RRd + leftWall.orientation);
 
-            const dx = f + sin(fd);
-            const dy = f + cos(fd);
 
-            leftWall.right.xd = leftWall.right.x - dx;
+            let dx = roundLength(f * sin(fd));
+            let dy = roundLength(f * cos(fd));
+
+            if (LRd < 0) {
+                dx = -dx;
+                //dy = -dy;
+            }
+
+            // 90   +/-
+            // -90  -/-
+
+            console.info(JSON.stringify({
+                Lo: leftWall.orientation,
+                Ro: rightWall.orientation,
+                L: leftWall.thickness,
+                R: rightWall.thickness,
+                LRd,
+                Lsm,
+                Rsm,
+                f,
+                RRd,
+                fd,
+                dx,
+                dy
+
+            }, null, 2))
+
+            leftWall.right.xd = leftWall.right.x + dx;
             leftWall.right.yd = leftWall.right.y - dy;
+
             rightWall.left.xd = leftWall.right.xd;
             rightWall.left.yd = leftWall.right.yd;
-
-            //const orientationDiff = (180 - (leftWall.orientation - rightWall.orientation)) / 2 + leftWall.orientation;
-
-            // const thicknessOffset = Math.sqrt(leftWall.thickness * leftWall.thickness + rightWall.thickness * rightWall.thickness);
-            // const depthOffset = calculateOffset(orientationDiff, thicknessOffset);
-
-            // leftWall.left.xd = leftWall.left.x - depthOffset.cx;
-            // leftWall.left.yd = leftWall.left.y - depthOffset.cy;
-            // rightWall.right.xd = leftWall.left.xd;
-            // rightWall.right.yd = leftWall.left.yd;
-
-            ////////////////////
-            // const depthOffsetLeft = calculateOffset(orientationDiff, Math.sqrt(leftWall.thickness * leftWall.thickness + leftWall.thickness * leftWall.thickness));
-            // leftWall.left.xd = leftWall.left.x - depthOffsetLeft.cx;
-            // leftWall.left.yd = leftWall.left.y - depthOffsetLeft.cy;
-
-            // const depthOffsetRight = calculateOffset(orientationDiff, Math.sqrt(rightWall.thickness * rightWall.thickness + rightWall.thickness * rightWall.thickness));
-            // rightWall.right.xd = rightWall.right.x - depthOffsetRight.cx;
-            // rightWall.right.yd = rightWall.right.y - depthOffsetRight.cy;
-
-            ////////////////////
-            // const orientationDiff = (180 - (leftWall.orientation - rightWall.orientation)  + leftWall.orientation)/2;
-
-            // let cosA = Math.cos(orientationDiff * (Math.PI / 180));
-            // if (Math.abs(cosA) < 0.000001) {
-            //     cosA = 0;
-            // }
-
-            // const lth = roundLength(cosA ? leftWall.thickness * cosA : 0);
-            // const depthOffsetLeft = calculateOffset(orientationDiff, lth);
-            // leftWall.left.xd = leftWall.left.x - depthOffsetLeft.cx;
-            // leftWall.left.yd = leftWall.left.y - depthOffsetLeft.cy;
-
-            // const rth = roundLength(cosA ? rightWall.thickness * cosA : 0);
-            // const depthOffsetRight = calculateOffset(orientationDiff, rth);
-            // rightWall.right.xd = rightWall.right.x - depthOffsetRight.cx;
-            // rightWall.right.yd = rightWall.right.y - depthOffsetRight.cy;
-
-            ////////
-
 
 
             current = current.rightSegment;

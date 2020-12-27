@@ -1,0 +1,16 @@
+spaces:
+  kitchen:
+    floorPlan:
+      - $rotate: 0 cw
+      - wall:
+          name: thick
+          length: 20"
+          height: 105.5"
+          thickness: 4"
+      - $rotate: -60 cw
+      - wall:
+          name: thin
+          length: 20"
+          thickness: 8"
+      
+      
