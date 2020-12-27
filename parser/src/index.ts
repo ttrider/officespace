@@ -47,7 +47,6 @@ const data2 = YAML.parse(strData);
 
 fs.writeFileSync("./play.raw.json", JSON.stringify(data2, null, 2));
 
-
 const context = processData(data2);
 
 const space = context.spaces[0];
