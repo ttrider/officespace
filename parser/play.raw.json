@@ -115,6 +115,15 @@
             "length": "155.5\" 26\" left",
             "thickness": "4-1/4\""
           }
+        },
+        {
+          "$rotate": "90 deg ccw"
+        },
+        {
+          "wall": {
+            "length": "46\" left",
+            "height": "36\""
+          }
         }
       ]
     }

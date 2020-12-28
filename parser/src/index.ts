@@ -40,7 +40,7 @@ function processData(input: any) {
     return context;
 }
 
-const bd = fs.readFileSync("../play.raw.yml");
+const bd = fs.readFileSync("./play.raw.yml");
 const strData = (bd ?? "").toString();
 
 const data2 = YAML.parse(strData);
